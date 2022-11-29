@@ -1,9 +1,7 @@
-import readline from "readline"
-import { Colors } from "./utils/Colors.js";
+import { stdin as input, stdout as output } from "node:process"
+import readline from "node:readline"
+import { CLI } from "./CLI.js"
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+const myCLI = new CLI()
 
-rl.question(Colors.FgCyan + " What's your name ?\n", (res) => {
-  console.log("Salut " + res);
-  rl.close()
-})
+myCLI.start("Bienvenue", { font: "Cyan" })

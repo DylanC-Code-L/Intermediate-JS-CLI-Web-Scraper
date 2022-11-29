@@ -1,27 +1,57 @@
-export class Colors {
-  static readonly Reset = "\x1b[0m"
-  static readonly Bright = "\x1b[1m"
-  static readonly Dim = "\x1b[2m"
-  static readonly Underscore = "\x1b[4m"
-  static readonly Blink = "\x1b[5m"
-  static readonly Reverse = "\x1b[7m"
-  static readonly Hidden = "\x1b[8m"
+export type Colors_Settings =
+  "Reset" |
+  "Bright" |
+  "Dim" |
+  "Underscore" |
+  "Blink" |
+  "Reverse" |
+  "Hidden"
 
-  static readonly FgBlack = "\x1b[30m"
-  static readonly FgRed = "\x1b[31m"
-  static readonly FgGreen = "\x1b[32m"
-  static readonly FgYellow = "\x1b[33m"
-  static readonly FgBlue = "\x1b[34m"
-  static readonly FgMagenta = "\x1b[35m"
-  static readonly FgCyan = "\x1b[36m"
-  static readonly FgWhite = "\x1b[37m"
+export type Colors_Font =
+  "Black" |
+  "Red" |
+  "Green" |
+  "Yellow" |
+  "Blue" |
+  "Magenta" |
+  "Cyan" |
+  "White"
 
-  static readonly BgBlack = "\x1b[40m"
-  static readonly BgRed = "\x1b[41m"
-  static readonly BgGreen = "\x1b[42m"
-  static readonly BgYellow = "\x1b[43m"
-  static readonly BgBlue = "\x1b[44m"
-  static readonly BgMagenta = "\x1b[45m"
-  static readonly BgCyan = "\x1b[46m"
-  static readonly BgWhite = "\x1b[47m"
+export type Colors_Background =
+  "BgBlack" |
+  "BgRed" |
+  "BgGreen" |
+  "BgYellow" |
+  "BgBlue" |
+  "BgMagenta" |
+  "BgCyan" |
+  "BgWhite"
+
+export const GlobalColors = {
+  Reset: "\x1b[0m",
+  Bright: "\x1b[1m",
+  Dim: "\x1b[2m",
+  Underscore: "\x1b[4m",
+  Blink: "\x1b[5m",
+  Reverse: "\x1b[7m",
+  Hidden: "\x1b[8m",
+
+  Black: "\x1b[30m",
+  Red: "\x1b[31m",
+  Green: "\x1b[32m",
+  Yellow: "\x1b[33m",
+  Blue: "\x1b[34m",
+  Magenta: "\x1b[35m",
+  Cyan: "\x1b[36m",
+  White: "\x1b[37m",
+
+  BgBlack: "\x1b[40m",
+  BgRed: "\x1b[41m",
+  BgGreen: "\x1b[42m",
+  BgYellow: "\x1b[43m",
+  BgBlue: "\x1b[44m",
+  BgMagenta: "\x1b[45m",
+  BgCyan: "\x1b[46m",
+  BgWhite: "\x1b[47m"
 }
+
