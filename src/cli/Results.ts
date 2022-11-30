@@ -1,17 +1,21 @@
+import { Scrapper } from "../web/Scrapper.js";
 import { Actions } from "./Actions.js";
 import { Component } from "./Component.js";
 
 export class Results extends Component {
-  static summary(result: string) {
-    console.clear()
+  static scrapper = Scrapper.getInstance()
 
-    if (!Number(result)) {
+  static summary(result: string) {
+    // console.clear()
+    // console.log(result);
+
+    if (typeof +result !== "number") {
       this.instruction("Index invalid !\n", true)
       return Actions.summary()
     }
 
     switch (+result) {
-      case 0: console.log("Subject => random subject");
+      case 0: this.scrapper.random()
         break
       case 1: console.log("Subject => categories");
         break
