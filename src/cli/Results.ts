@@ -1,9 +1,13 @@
-export class Results {
+import { Actions } from "./Actions.js";
+import { Component } from "./Component.js";
+
+export class Results extends Component {
   static result1(result: string) {
     console.clear()
-    if (Number(result)) console.log("yes number");
-    else console.log("nnot number");
 
-
+    if (!Number(result)) {
+      console.log("Index invalid !\n");
+      return Actions.summary()
+    }
   }
 }
