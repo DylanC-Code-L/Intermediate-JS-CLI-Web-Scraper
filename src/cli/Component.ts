@@ -1,4 +1,13 @@
-import { Colors_Background, Colors_Font, Colors_Settings, GlobalColors } from "../utils/Colors.js"
+import { GlobalColors } from "../utils/Colors.js"
+import { stdin as input, stdout as output } from "node:process"
+
+interface Keypressed {
+  sequence: string
+  name: string
+  ctrl: boolean
+  meta: boolean
+  shift: boolean
+}
 
 export abstract class Component {
   protected static formatText(text: string[]): string {
@@ -11,8 +20,14 @@ export abstract class Component {
     return formatedText
   }
 
-  protected static instruction(text: string, error?: boolean): string {
+  protected static instruction(text: string, error?: boolean): void {
     const textColor = error ? GlobalColors.Red : GlobalColors.White
-    return textColor + text + "\n\n"
+    output.write(textColor + text + "\n\n")
+  }
+
+  protected static keypressHandler() {
+    return new Promise<Keypressed>((resolve) =>
+      input.once("keypress", (_, key) => { resolve(key) })
+    )
   }
 }

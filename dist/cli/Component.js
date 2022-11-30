@@ -1,4 +1,5 @@
 import { GlobalColors } from "../utils/Colors.js";
+import { stdin as input, stdout as output } from "node:process";
 export class Component {
     static formatText(text) {
         const beforeNum = GlobalColors.Reset + GlobalColors.Red;
@@ -9,6 +10,9 @@ export class Component {
     }
     static instruction(text, error) {
         const textColor = error ? GlobalColors.Red : GlobalColors.White;
-        return textColor + text + "\n\n";
+        output.write(textColor + text + "\n\n");
+    }
+    static keypressHandler() {
+        return new Promise((resolve) => input.once("keypress", (_, key) => { resolve(key); }));
     }
 }

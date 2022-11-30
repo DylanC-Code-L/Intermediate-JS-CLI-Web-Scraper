@@ -2,12 +2,24 @@ import { Actions } from "./Actions.js";
 import { Component } from "./Component.js";
 
 export class Results extends Component {
-  static result1(result: string) {
+  static summary(result: string) {
     console.clear()
 
     if (!Number(result)) {
-      console.log("Index invalid !\n");
+      this.instruction("Index invalid !\n", true)
       return Actions.summary()
+    }
+
+    switch (+result) {
+      case 0: console.log("Subject => random subject");
+        break
+      case 1: console.log("Subject => categories");
+        break
+      case 2: console.log("Subject => keywords");
+        break;
+      default: this.instruction(`Subject => ${result} inexistant !`, true);
+        Actions.summary()
+        break;
     }
   }
 }
