@@ -1,4 +1,4 @@
-import { CLI } from "./CLI.js"
+import { CLI } from "./cli/CLI.js"
 
 const myCLI = CLI.getInstance()
 

@@ -1,7 +1,8 @@
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline";
 import { Actions } from "./Actions.js";
-import { GlobalColors } from "./utils/Colors.js";
+import { GlobalColors } from "../utils/Colors.js";
+import { Results } from "./Results.js";
 export class CLI {
     static instance;
     formatedColors = "\x1b[0m";
@@ -29,7 +30,8 @@ export class CLI {
         console.clear();
         output.write(`${this.formatedColors}${message}${this.separator}`);
         Actions.summary();
-        const res = await this.keypressHandler();
+        const { name: keypressed } = await this.keypressHandler();
+        Results.result1(keypressed);
     }
     translateColor(colors) {
         this.formatedColors += GlobalColors[colors.bg] || "";
