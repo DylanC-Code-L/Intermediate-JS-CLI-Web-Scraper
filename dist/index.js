@@ -1,3 +1,3 @@
 import { CLI } from "./CLI.js";
-const myCLI = new CLI();
+const myCLI = CLI.getInstance();
 myCLI.start("Bienvenue", { font: "Cyan" });
