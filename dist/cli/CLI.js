@@ -4,9 +4,8 @@ import { Actions } from "./Actions.js";
 import { GlobalColors } from "../utils/Colors.js";
 export class CLI {
     static instance;
-    formatedColors = "\x1b[0m";
+    promptConfig = "\x1b[0m";
     separator = GlobalColors.Magenta + "\n--------------------------\n\n";
-    static teton = "teton";
     constructor() {
         this.config();
     }
@@ -21,15 +20,14 @@ export class CLI {
         this.instance = new CLI();
         return this.instance;
     }
-    async start(message, colors) {
-        this.translateColor(colors);
+    async start(message) {
         console.clear();
-        output.write(`${this.formatedColors}${message}${this.separator}`);
+        output.write(`${this.promptConfig}${message}${this.separator}`);
         Actions.summary();
     }
-    translateColor(colors) {
-        this.formatedColors += GlobalColors[colors.bg] || "";
-        this.formatedColors += GlobalColors[colors.font] || "";
-        this.formatedColors += GlobalColors[colors.settings] || "";
+    setPromptCli(configs) {
+        for (const config of Object.values(configs))
+            config ? this.promptConfig += GlobalColors[config] : null;
+        return this;
     }
 }

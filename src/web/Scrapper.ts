@@ -1,5 +1,7 @@
 import puppeteer, { Page } from "puppeteer";
 
+export type ScrapperResponse = { h1: string, p: string }
+
 export class Scrapper {
   private static instance: Scrapper
   private page: Page
@@ -20,7 +22,7 @@ export class Scrapper {
     this.page = await browser.newPage()
   }
 
-  async random() {
+  async random(): Promise<ScrapperResponse> {
     await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard", { waitUntil: "domcontentloaded" })
     await this.page.pdf({ path: "./acceuil.pdf", format: "A4" })
 
@@ -39,7 +41,6 @@ export class Scrapper {
       }
     }
 
-    console.log(h1);
-    console.log(p);
+    return { h1, p }
   }
 }

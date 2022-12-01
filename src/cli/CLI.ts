@@ -3,7 +3,7 @@ import readline from "node:readline"
 import { Actions } from "./Actions.js"
 import { Colors_Background, Colors_Font, Colors_Settings, GlobalColors } from "../utils/Colors.js"
 
-type CLIColor = {
+interface CLIColor {
   settings?: Colors_Settings
   font?: Colors_Font
   bg?: Colors_Background
@@ -11,10 +11,9 @@ type CLIColor = {
 
 export class CLI {
   private static instance: CLI
-  private formatedColors: string = "\x1b[0m"
+  private promptConfig: string = "\x1b[0m"
   private separator: string =
     GlobalColors.Magenta + "\n--------------------------\n\n"
-  static teton = "teton"
 
   private constructor() {
     this.config()
@@ -33,19 +32,18 @@ export class CLI {
     return this.instance
   }
 
-  async start(message: string, colors?: CLIColor) {
-    this.translateColor(colors)
-
+  async start(message: string) {
     console.clear()
-    output.write(`${this.formatedColors}${message}${this.separator}`);
+    output.write(`${this.promptConfig}${message}${this.separator}`);
 
     Actions.summary()
   }
 
-  private translateColor(colors: CLIColor): void {
-    this.formatedColors += GlobalColors[colors.bg] || ""
-    this.formatedColors += GlobalColors[colors.font] || ""
-    this.formatedColors += GlobalColors[colors.settings] || ""
+  public setPromptCli(configs: CLIColor): CLI {
+    for (const config of Object.values(configs))
+      config ? this.promptConfig += GlobalColors[config] : null
+
+    return this
   }
 }
 

@@ -1,5 +1,5 @@
 import { GlobalColors } from "../utils/Colors.js"
-import { stdin as input, stdout as output } from "node:process"
+import { stdin, stdout } from "node:process"
 
 interface Keypressed {
   sequence: string
@@ -10,6 +10,9 @@ interface Keypressed {
 }
 
 export abstract class Component {
+  protected static output = stdout
+  protected static input = stdin
+
   protected static formatText(text: string[]): string {
     const beforeNum = GlobalColors.Reset + GlobalColors.Red
     const afterNum = GlobalColors.Green
@@ -22,12 +25,12 @@ export abstract class Component {
 
   protected static instruction(text: string, error?: boolean): void {
     const textColor = error ? GlobalColors.Red : GlobalColors.White
-    output.write(textColor + text + "\n\n")
+    this.output.write(textColor + text + "\n\n")
   }
 
   protected static keypressHandler() {
     return new Promise<Keypressed>((resolve) =>
-      input.once("keypress", (_, key) => { resolve(key) })
+      this.input.once("keypress", (_, key) => { resolve(key) })
     )
   }
 }

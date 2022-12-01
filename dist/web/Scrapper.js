@@ -29,7 +29,6 @@ export class Scrapper {
                 break;
             }
         }
-        console.log(h1);
-        console.log(p);
+        return { h1, p };
     }
 }
