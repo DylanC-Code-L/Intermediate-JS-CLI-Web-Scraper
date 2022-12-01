@@ -1,6 +1,5 @@
 import { stdin as input, stdout as output } from "node:process"
 import readline from "node:readline"
-import { Actions } from "./Actions.js"
 import { Colors_Background, Colors_Font, Colors_Settings, GlobalColors } from "../utils/Colors.js"
 
 interface CLIColor {
@@ -11,8 +10,8 @@ interface CLIColor {
 
 export class CLI {
   private static instance: CLI
-  private promptConfig: string = "\x1b[0m"
-  private separator: string =
+  public promptConfig: string = "\x1b[0m"
+  public separator: string =
     GlobalColors.Magenta + "\n--------------------------\n\n"
 
   private constructor() {
@@ -30,13 +29,6 @@ export class CLI {
 
     this.instance = new CLI()
     return this.instance
-  }
-
-  async start(message: string) {
-    console.clear()
-    output.write(`${this.promptConfig}${message}${this.separator}`);
-
-    Actions.summary()
   }
 
   public setPromptCli(configs: CLIColor): CLI {

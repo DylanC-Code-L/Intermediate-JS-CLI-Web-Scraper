@@ -2,8 +2,20 @@ import { Scrapper } from "../web/Scrapper.js";
 import { Actions } from "./Actions.js";
 import { Component } from "./Component.js";
 export class Results extends Component {
+    instantiedCLI;
+    static instance;
+    constructor(instantiedCLI) {
+        super(instantiedCLI);
+        this.instantiedCLI = instantiedCLI;
+    }
+    static getInstance(instantiedCLI) {
+        if (this.instance)
+            return this.instance;
+        this.instance = new Results(instantiedCLI);
+        return this.instance;
+    }
     static scrapper = Scrapper.getInstance();
-    static async summary(result) {
+    async summary(result) {
         console.clear();
         if (typeof +result !== "number") {
             this.instruction("Index invalid !\n", true);
@@ -27,7 +39,7 @@ export class Results extends Component {
         }
         this.displayResponse(response);
     }
-    static displayResponse(response) {
+    displayResponse(response) {
         this.output.write(response.h1);
         this.output.write(response.p);
     }

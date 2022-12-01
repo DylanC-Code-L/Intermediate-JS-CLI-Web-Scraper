@@ -1,6 +1,5 @@
-import { stdin as input, stdout as output } from "node:process";
+import { stdin as input } from "node:process";
 import readline from "node:readline";
-import { Actions } from "./Actions.js";
 import { GlobalColors } from "../utils/Colors.js";
 export class CLI {
     static instance;
@@ -19,11 +18,6 @@ export class CLI {
             return this.instance;
         this.instance = new CLI();
         return this.instance;
-    }
-    async start(message) {
-        console.clear();
-        output.write(`${this.promptConfig}${message}${this.separator}`);
-        Actions.summary();
     }
     setPromptCli(configs) {
         for (const config of Object.values(configs))

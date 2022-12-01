@@ -1,11 +1,25 @@
 import { Scrapper, ScrapperResponse } from "../web/Scrapper.js";
 import { Actions } from "./Actions.js";
+import { CLI } from "./CLI.js";
 import { Component } from "./Component.js";
 
 export class Results extends Component {
+  private static instance: Results
+
+  private constructor(protected instantiedCLI: CLI) {
+    super(instantiedCLI)
+  }
+
+  static getInstance(instantiedCLI: CLI): Results {
+    if (this.instance) return this.instance
+
+    this.instance = new Results(instantiedCLI)
+    return this.instance
+  }
+
   static scrapper = Scrapper.getInstance()
 
-  static async summary(result: string) {
+  public async summary(result: string) {
     console.clear()
 
     if (typeof +result !== "number") {
@@ -30,7 +44,7 @@ export class Results extends Component {
     this.displayResponse(response)
   }
 
-  private static displayResponse(response: ScrapperResponse) {
+  private displayResponse(response: ScrapperResponse) {
     this.output.write(response.h1)
     this.output.write(response.p)
   }

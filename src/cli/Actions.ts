@@ -1,19 +1,39 @@
-import { stdin as input, stdout as output } from "node:process"
-import { Colors_Background, Colors_Font, Colors_Settings, GlobalColors } from "../utils/Colors.js"
+import { stdout as output } from "node:process"
+import { GlobalColors } from "../utils/Colors.js"
+import { CLI } from "./CLI.js"
 import { Component } from "./Component.js"
-import { Results } from "./Results.js"
 
 export class Actions extends Component {
-  static async summary() {
-    const choice = ["Random subject", "Categories", "Keywords"]
+  private static instance: Actions
 
+  private constructor(protected instantiedCLI: CLI) {
+    super(instantiedCLI)
+  }
+
+  static getInstance(instantiedCLI: CLI): Actions {
+    if (this.instance) return this.instance
+
+    this.instance = new Actions(instantiedCLI)
+    return this.instance
+  }
+
+  async prompt_Ordonned_List(items: string[]): Promise<string> {
     this.instruction("Please chose an index below and press Enter.")
-    const text = this.formatText(choice)
+    const text = this.format_Ordonned_List_With_Color_Settings(items)
 
     output.write(text)
-
     const { name: keypressed } = await this.keypressHandler()
 
-    Results.summary(keypressed)
+    return keypressed
+  }
+
+  protected format_Ordonned_List_With_Color_Settings(texts: string[]): string {
+    const beforeIndex = GlobalColors.Reset + GlobalColors.Red
+    const afterIndex = GlobalColors.Green
+    const beforeText = GlobalColors.Yellow
+
+    const formatedOrdonnedList =
+      texts.map((text, index) => `${beforeIndex}${index}${afterIndex} --${beforeText} ${text}\n`).join('')
+    return formatedOrdonnedList
   }
 }
