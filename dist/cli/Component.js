@@ -11,8 +11,10 @@ export class Component {
         let textColor;
         if (type === "perso")
             textColor = this.instantiedCLI.promptConfig;
-        else if (type === "error")
+        else if (type === "error") {
+            console.clear();
             textColor = GlobalColors.Red;
+        }
         else
             textColor = GlobalColors.White;
         this.output.write(textColor + text + "\n\n");

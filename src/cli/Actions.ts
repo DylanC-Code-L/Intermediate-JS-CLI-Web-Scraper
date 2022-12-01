@@ -22,9 +22,12 @@ export class Actions extends Component {
     const text = this.format_Ordonned_List_With_Color_Settings(items)
 
     output.write(text)
-    const { name: keypressed } = await this.keypressHandler()
 
-    return keypressed
+    const { name: keypressed } = await this.keypressHandler()
+    const valid = this.validKeyPress(keypressed, items.length)
+
+    if (valid) return keypressed
+    this.prompt_Ordonned_List(items)
   }
 
   protected format_Ordonned_List_With_Color_Settings(texts: string[]): string {
@@ -35,5 +38,21 @@ export class Actions extends Component {
     const formatedOrdonnedList =
       texts.map((text, index) => `${beforeIndex}${index}${afterIndex} --${beforeText} ${text}\n`).join('')
     return formatedOrdonnedList
+  }
+
+  play_One_Result_Of_An_Ordonned_List(index: number, actions: Function[]) {
+    actions[index]()
+  }
+
+  validKeyPress(key: string, max: number): boolean {
+    if (Number.isNaN(Number(key))) {
+      this.instruction(`It's not a valid index !`, "error")
+      return false
+    } else if (+key > max - 1 || +key < 0) {
+      this.instruction(`It's not a valid index !`, "error")
+      return false
+    }
+
+    return true
   }
 }
