@@ -23,3 +23,4 @@ export const GlobalColors = {
     BgCyan: "\x1b[46m",
     BgWhite: "\x1b[47m"
 };
+//# sourceMappingURL=Colors.js.map

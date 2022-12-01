@@ -24,3 +24,4 @@ export class Component {
         return new Promise((resolve) => this.input.once("keypress", (_, key) => { resolve(key); }));
     }
 }
+//# sourceMappingURL=Component.js.map

@@ -17,17 +17,21 @@ export class Actions extends Component {
     return this.instance
   }
 
-  async prompt_Ordonned_List(items: string[]): Promise<string> {
+  async prompt_Ordonned_List(items: string[]): Promise<number> {
+    // 1. Print generic instruction and the ordonned list of strings
     this.instruction("Please chose an index below and press Enter.")
     const text = this.format_Ordonned_List_With_Color_Settings(items)
 
     output.write(text)
 
+    // 2. Get the key pressed by the user and control if its number
     const { name: keypressed } = await this.keypressHandler()
-    const valid = this.validKeyPress(keypressed, items.length)
 
-    if (valid) return keypressed
-    this.prompt_Ordonned_List(items)
+    const numberOrFalse = this.valid_Number_Press(keypressed, items.length)
+
+    // 3. If valid return the key pressed and if isn't, replay the method
+    if (typeof numberOrFalse === "number") return numberOrFalse
+    return this.prompt_Ordonned_List(items)
   }
 
   protected format_Ordonned_List_With_Color_Settings(texts: string[]): string {
@@ -44,15 +48,15 @@ export class Actions extends Component {
     actions[index]()
   }
 
-  validKeyPress(key: string, max: number): boolean {
-    if (Number.isNaN(Number(key))) {
+  valid_Number_Press(keypressed: string, max: number) {
+    if (Number.isNaN(Number(keypressed))) {
       this.instruction(`It's not a valid index !`, "error")
       return false
-    } else if (+key > max - 1 || +key < 0) {
+    } else if (+keypressed > max - 1 || +keypressed < 0) {
       this.instruction(`It's not a valid index !`, "error")
       return false
     }
 
-    return true
+    return +keypressed
   }
 }

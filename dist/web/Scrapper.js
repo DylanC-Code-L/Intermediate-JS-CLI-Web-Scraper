@@ -32,3 +32,4 @@ export class Scrapper {
         return { h1, p };
     }
 }
+//# sourceMappingURL=Scrapper.js.map
