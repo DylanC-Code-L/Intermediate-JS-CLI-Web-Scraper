@@ -31,9 +31,15 @@ export abstract class Component {
     return this
   }
 
-  protected keypressHandler() {
+  protected keypressed_Handler(): Promise<Keypressed> {
     return new Promise<Keypressed>((resolve) =>
       this.input.once("keypress", (_, key) => { resolve(key) })
+    )
+  }
+
+  protected multiple_Keypressed_Handler(): Promise<string> {
+    return new Promise<string>(resolve =>
+      this.input.on("data", (data) => { resolve(data.toString()) })
     )
   }
 }

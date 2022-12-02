@@ -25,7 +25,7 @@ export class Actions extends Component {
     output.write(text + '\n')
 
     // 2. Get the key pressed by the user and control if its number
-    const { name: keypressed } = await this.keypressHandler()
+    const { name: keypressed } = await this.keypressed_Handler()
 
     const numberOrFalse = this.valid_Number_Press(keypressed, items.length)
 
@@ -58,5 +58,11 @@ export class Actions extends Component {
     }
 
     return +keypressed
+  }
+
+  async get_Value_From_User(message: string): Promise<string> {
+    this.instruction(message)
+
+    return await this.multiple_Keypressed_Handler()
   }
 }

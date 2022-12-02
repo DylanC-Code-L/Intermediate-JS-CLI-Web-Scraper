@@ -28,7 +28,8 @@ export class Results extends Component {
                 response = await this.scrapper.categories();
                 break;
             case 2:
-                console.log("Subject => keywords");
+                const research = await this.instantiedAction.get_Value_From_User("Taper quelque chose à rechercher :\n\n --> ");
+                reesponse = this.scrapper.research(research);
                 break;
             default: {
                 this.instruction(`Subject => ${result} inexistant!`, "error");

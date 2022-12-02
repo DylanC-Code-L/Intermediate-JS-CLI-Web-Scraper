@@ -20,8 +20,11 @@ export class Component {
         this.output.write(textColor + text + "\n\n");
         return this;
     }
-    keypressHandler() {
+    keypressed_Handler() {
         return new Promise((resolve) => this.input.once("keypress", (_, key) => { resolve(key); }));
+    }
+    multiple_Keypressed_Handler() {
+        return new Promise(resolve => this.input.on("data", (data) => { resolve(data.toString()); }));
     }
 }
 //# sourceMappingURL=Component.js.map

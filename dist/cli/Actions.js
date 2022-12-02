@@ -20,7 +20,7 @@ export class Actions extends Component {
         const text = this.format_Ordonned_List_With_Color_Settings(items);
         output.write(text + '\n');
         // 2. Get the key pressed by the user and control if its number
-        const { name: keypressed } = await this.keypressHandler();
+        const { name: keypressed } = await this.keypressed_Handler();
         const numberOrFalse = this.valid_Number_Press(keypressed, items.length);
         // 3. If valid return the key pressed and if isn't, replay the method
         if (typeof numberOrFalse === "number")
@@ -47,6 +47,10 @@ export class Actions extends Component {
             return false;
         }
         return +keypressed;
+    }
+    async get_Value_From_User(message) {
+        this.instruction(message);
+        return await this.multiple_Keypressed_Handler();
     }
 }
 //# sourceMappingURL=Actions.js.map
