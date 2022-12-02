@@ -10,7 +10,7 @@ myCLI
   .setPromptCli({ font: "Cyan" })
 
 const summaryResult = await actions
-  .instruction("Bonjour et bienvenue", "perso")
+  .instruction("Bonjour et bienvenue\n\n", "perso")
   .prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
   
 results.summary(summaryResult)

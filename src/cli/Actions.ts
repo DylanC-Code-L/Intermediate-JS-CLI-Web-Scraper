@@ -19,7 +19,7 @@ export class Actions extends Component {
 
   async prompt_Ordonned_List(items: string[]): Promise<number> {
     // 1. Print generic instruction and the ordonned list of strings
-    this.instruction("Please chose an index below and press Enter.")
+    this.instruction("Please chose an index below and press Enter.\n\n")
     const text = this.format_Ordonned_List_With_Color_Settings(items)
 
     output.write(text + '\n')
@@ -50,10 +50,10 @@ export class Actions extends Component {
 
   valid_Number_Press(keypressed: string, max: number) {
     if (Number.isNaN(Number(keypressed))) {
-      this.instruction(`It's not a valid index !`, "error")
+      this.instruction(`It's not a valid index !\n\n`, "error")
       return false
     } else if (+keypressed > max - 1 || +keypressed < 0) {
-      this.instruction(`It's not a valid index !`, "error")
+      this.instruction(`It's not a valid index !\n\n`, "error")
       return false
     }
 

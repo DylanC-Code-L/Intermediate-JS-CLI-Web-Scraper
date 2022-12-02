@@ -30,11 +30,13 @@ export class Results extends Component {
         break
       case 1: response = await this.scrapper.categories()
         break
-      case 2: const research = await this.instantiedAction.get_Value_From_User("Taper quelque chose à rechercher :\n\n --> ")
+      case 2:
+        console.clear()
+        const research = await this.instantiedAction.get_Value_From_User("Taper quelque chose à rechercher :\n --> ")
         response = await this.scrapper.research(research)
         break;
       default: {
-        this.instruction(`Subject => ${result} inexistant!`, "error");
+        this.instruction(`Subject => ${result} inexistant!\n\n`, "error");
         const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
         this.summary(summaryResult)
         return;
@@ -43,5 +45,10 @@ export class Results extends Component {
 
     console.clear()
     this.instruction(response)
+
+    this.instruction("\n\nMenu\n\n")
+    const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
+
+    this.summary(summaryResult)
   }
 }

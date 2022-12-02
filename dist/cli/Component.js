@@ -17,7 +17,7 @@ export class Component {
         }
         else
             textColor = GlobalColors.White;
-        this.output.write(textColor + text + "\n\n");
+        this.output.write(textColor + text);
         return this;
     }
     keypressed_Handler() {

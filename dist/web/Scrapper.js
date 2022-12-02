@@ -39,15 +39,7 @@ export class Scrapper {
         // 1. Open page 'Categorie' and get categories' ancre
         await this.page.goto("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Accueil");
         const categoriesElements = await this.page.$$("#mw-content-text > div > div:nth-child(3) b > a");
-        // 2. Extract each name and url and format them in string 
-        const categories = categoriesElements.map(async (el) => {
-            const categoryName = await (await el.getProperty("textContent")).jsonValue();
-            const url = await (await el.getProperty("href")).jsonValue();
-            return `${GlobalColors.Yellow}Category : ${GlobalColors.White}${categoryName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`;
-        });
-        // 3. Return string that contain all category previously formated
-        const result = await Promise.all(categories);
-        return result.join("\n\n");
+        return await this.extract_And_Format_Data(categoriesElements, "Category");
     }
     async research(search) {
         await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche");
@@ -55,12 +47,17 @@ export class Scrapper {
         await this.page.click("#search button[type='submit']");
         await this.page.waitForNavigation();
         const articlesElements = await this.page.$$(".mw-search-results li:nth-child(-n+3) .searchResultImage-text a");
-        const articles = articlesElements.map(async (el) => {
+        return await this.extract_And_Format_Data(articlesElements, "Article");
+    }
+    async extract_And_Format_Data(data, type) {
+        // 1. Extract each name and url and format them in string 
+        const formatData = data.map(async (el) => {
             const articleName = await (await el.getProperty("textContent")).jsonValue();
             const url = await (await el.getProperty("href")).jsonValue();
-            return `${GlobalColors.Yellow}Article : ${GlobalColors.White}${articleName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`;
+            return `${GlobalColors.Yellow}${type} : ${GlobalColors.White}${articleName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`;
         });
-        const result = await Promise.all(articles);
+        // 3. Return string that contain all data previously formated
+        const result = await Promise.all(formatData);
         return result.join("\n\n");
     }
 }
