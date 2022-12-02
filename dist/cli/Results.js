@@ -18,13 +18,14 @@ export class Results extends Component {
     scrapper = Scrapper.getInstance();
     async summary(result) {
         console.clear();
-        let response = {};
+        this.output.write("Waiting...");
+        let response;
         switch (result) {
             case 0:
                 response = await this.scrapper.random();
                 break;
             case 1:
-                console.log("Subject => categories");
+                response = await this.scrapper.categories();
                 break;
             case 2:
                 console.log("Subject => keywords");
@@ -36,11 +37,8 @@ export class Results extends Component {
                 return;
             }
         }
-        this.displayResponse(response);
-    }
-    displayResponse(response) {
-        this.output.write(response.h1);
-        this.output.write(response.p);
+        console.clear();
+        this.instruction(response);
     }
 }
 //# sourceMappingURL=Results.js.map

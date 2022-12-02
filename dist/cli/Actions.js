@@ -18,7 +18,7 @@ export class Actions extends Component {
         // 1. Print generic instruction and the ordonned list of strings
         this.instruction("Please chose an index below and press Enter.");
         const text = this.format_Ordonned_List_With_Color_Settings(items);
-        output.write(text);
+        output.write(text + '\n');
         // 2. Get the key pressed by the user and control if its number
         const { name: keypressed } = await this.keypressHandler();
         const numberOrFalse = this.valid_Number_Press(keypressed, items.length);

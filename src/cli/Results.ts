@@ -1,4 +1,4 @@
-import { Scrapper, ScrapperResponse } from "../web/Scrapper.js";
+import { Scrapper } from "../web/Scrapper.js";
 import { Actions } from "./Actions.js";
 import { CLI } from "./CLI.js";
 import { Component } from "./Component.js";
@@ -21,13 +21,14 @@ export class Results extends Component {
 
   public async summary(result: number) {
     console.clear()
+    this.output.write("Waiting...")
 
-    let response = {} as ScrapperResponse
+    let response: string
 
     switch (result) {
       case 0: response = await this.scrapper.random()
         break
-      case 1: console.log("Subject => categories");
+      case 1: response = await this.scrapper.categories()
         break
       case 2: console.log("Subject => keywords");
         break;
@@ -39,11 +40,7 @@ export class Results extends Component {
       }
     }
 
-    this.displayResponse(response)
-  }
-
-  private displayResponse(response: ScrapperResponse) {
-    this.output.write(response.h1)
-    this.output.write(response.p)
+    console.clear()
+    this.instruction(response)
   }
 }

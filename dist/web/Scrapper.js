@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import { GlobalColors } from "../utils/Colors.js";
 export class Scrapper {
     static instance;
     page;
@@ -29,7 +30,19 @@ export class Scrapper {
                 break;
             }
         }
-        return { h1, p };
+        const result = `Title : ${h1}\nShort Description : ${p.slice(0, 75)}...\n\nSee the article : ${this.page.url()}`;
+        return result;
+    }
+    async categories() {
+        await this.page.goto("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Accueil");
+        const categoriesElements = await this.page.$$("#mw-content-text > div > div:nth-child(3) b > a");
+        const categories = categoriesElements.map(async (el) => {
+            const categoryName = await (await el.getProperty("textContent")).jsonValue();
+            const url = await (await el.getProperty("href")).jsonValue();
+            return `${GlobalColors.Yellow}Category : ${GlobalColors.White}${categoryName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`;
+        });
+        const result = await Promise.all(categories);
+        return result.join("\n\n");
     }
 }
 //# sourceMappingURL=Scrapper.js.map
