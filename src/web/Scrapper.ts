@@ -64,8 +64,23 @@ export class Scrapper {
     return result.join("\n\n")
   }
 
-  async research(search: string) {
+  async research(search: string): Promise<string> {
+    await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche")
 
-    return "Heyhey"
+    await this.page.$eval("input[id='ooui-php-1']", (el, value) => el.value = value, search)
+    await this.page.click("#search button[type='submit']")
+    await this.page.waitForNavigation()
+
+    const articlesElements = await this.page.$$(".mw-search-results li:nth-child(-n+3) .searchResultImage-text a")
+
+    const articles = articlesElements.map(async el => {
+      const articleName = await (await el.getProperty("textContent")).jsonValue()
+      const url = await (await el.getProperty("href")).jsonValue()
+
+      return `${GlobalColors.Yellow}Article : ${GlobalColors.White}${articleName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`
+    })
+
+    const result = await Promise.all(articles)
+    return result.join("\n\n")
   }
 }

@@ -62,7 +62,6 @@ export class Actions extends Component {
 
   async get_Value_From_User(message: string): Promise<string> {
     this.instruction(message)
-
     return await this.multiple_Keypressed_Handler()
   }
 }
