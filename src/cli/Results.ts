@@ -5,9 +5,11 @@ import { Component, Instruction } from "./Component.js";
 
 export class Results extends Component {
   private static instance: Results
+  private scrapperInstance: Scrapper
 
   private constructor(protected instantiedCLI: CLI, private instantiedAction: Actions) {
     super(instantiedCLI)
+    this.scrapperInstance = Scrapper.getInstance()
   }
 
   static getInstance(instantiedCLI: CLI, instantiedAction: Actions): Results {
@@ -17,17 +19,15 @@ export class Results extends Component {
     return this.instance
   }
 
-  scrapper = Scrapper.getInstance()
-
   public async summary(result: number) {
     this.clear_And_Prompt("Waiting...")
 
     let response: string
 
     switch (result) {
-      case 0: response = await this.scrapper.random()
+      case 0: response = await this.scrapperInstance.random()
         break
-      case 1: response = await this.scrapper.categories()
+      case 1: response = await this.scrapperInstance.categories()
         break
       case 2: response = await this.wait_Input_And_Make_Research()
         break;
@@ -44,7 +44,7 @@ export class Results extends Component {
     this.clear_And_Prompt("Taper quelque chose à rechercher :\n --> ")
 
     const input = await this.multiple_Keypressed_Handler()
-    return await this.scrapper.research(input)
+    return await this.scrapperInstance.research(input)
   }
 
   private async replay_Summary(reason: string, type?: Instruction) {

@@ -4,6 +4,7 @@ import { GlobalColors } from "../utils/Colors.js";
 export class Scrapper {
   private static instance: Scrapper
   private page: Page
+  private WK_URL = "https://fr.wikipedia.org/wiki/"
 
   constructor() {
     this.start()
@@ -22,40 +23,36 @@ export class Scrapper {
   }
 
   async random(): Promise<string> {
-    // 1. Request to the url below that redirect to random article 
-    await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard", { waitUntil: "domcontentloaded" })
+    await this.page.goto(`${this.WK_URL}Sp%C3%A9cial:Page_au_hasard`)
 
-    // 2. Get h1 and multiple p elements, then extract them text 
-    const h1El = await this.page.$("#firstHeading")
-    const h1 = await (await h1El.getProperty('textContent')).jsonValue()
+    const h1Element = await this.page.$("#firstHeading")
+    const h1Content = await (await h1Element.getProperty('textContent')).jsonValue()
 
-    const p1El = await this.page.$$("#mw-content-text > div > p")
-    let p: string
+    const paragrapheElements = await this.page.$$("#mw-content-text > div > p")
+    let pContent = await this.find_First_Element_With_Text_Content(paragrapheElements)
 
-    // 3. Control if the p isn't empty and return formatted string
-    for (const el of p1El) {
-      const text = await (await el.getProperty("textContent")).jsonValue()
+    return `Title : ${h1Content}\nShort Description : ${pContent.slice(0, 75)}...\n\nSee the article : ${this.page.url()}`
+  }
 
-      if (text.trim() !== "") {
-        p = text
-        break
-      }
+  private async find_First_Element_With_Text_Content(elements: ElementHandle[]): Promise<string> {
+    for (const element of elements) {
+      const text = await (await element.getProperty("textContent")).jsonValue()
+      const isEmpty = text.trim() === ""
+
+      if (!isEmpty) return text
     }
-
-    const result = `Title : ${h1}\nShort Description : ${p.slice(0, 75)}...\n\nSee the article : ${this.page.url()}`
-    return result
+    return "No content has been find..."
   }
 
   async categories(): Promise<string> {
-    // 1. Open page 'Categorie' and get categories' ancre
-    await this.page.goto("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Accueil")
+    await this.page.goto(`${this.WK_URL}Cat%C3%A9gorie:Accueil`)
     const categoriesElements = await this.page.$$("#mw-content-text > div > div:nth-child(3) b > a")
 
     return await this.extract_And_Format_Data(categoriesElements, "Category")
   }
 
   async research(search: string): Promise<string> {
-    await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche")
+    await this.page.goto(`${this.WK_URL}Sp%C3%A9cial:Recherche`)
 
     await this.page.$eval("input[id='ooui-php-1']", (el, value) => el.value = value, search)
     await this.page.click("#search button[type='submit']")
