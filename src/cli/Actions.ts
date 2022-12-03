@@ -17,21 +17,22 @@ export class Actions extends Component {
     return this.instance
   }
 
-  async prompt_Ordonned_List(items: string[]): Promise<number> {
-    // 1. Print generic instruction and the ordonned list of strings
+  async prompt_Ordonned_List(lists: string[]): Promise<number> {
     this.instruction("Please chose an index below and press Enter.\n\n")
-    const text = this.format_Ordonned_List_With_Color_Settings(items)
+    const text = this.format_Ordonned_List_With_Color_Settings(lists)
 
     output.write(text + '\n')
 
-    // 2. Get the key pressed by the user and control if its number
+    return this.keypressed_For_Ordonned_List(lists)
+  }
+
+  async keypressed_For_Ordonned_List(lists: string[]): Promise<number> {
     const { name: keypressed } = await this.keypressed_Handler()
 
-    const numberOrFalse = this.valid_Number(keypressed, items.length)
+    const isNumber = this.valid_Number(keypressed, lists.length)
 
-    // 3. If valid return the key pressed and if isn't, replay the method
-    if (typeof numberOrFalse === "number") return numberOrFalse
-    return this.prompt_Ordonned_List(items)
+    if (isNumber) return +keypressed
+    return this.prompt_Ordonned_List(lists)
   }
 
   protected format_Ordonned_List_With_Color_Settings(texts: string[]): string {
@@ -44,11 +45,7 @@ export class Actions extends Component {
     return formatedOrdonnedList
   }
 
-  play_One_Result_Of_An_Ordonned_List(index: number, actions: Function[]) {
-    actions[index]()
-  }
-
-  valid_Number(value: string, max: number) {
+  valid_Number(value: string, max: number): boolean {
     const isNumber = Number.isNaN(Number(value))
     const isInRange = +value <= max - 1 && +value >= 0
 
@@ -60,7 +57,7 @@ export class Actions extends Component {
       return false
     }
 
-    return +value
+    return true
   }
 
   async get_Value_From_User(message: string): Promise<string> {
