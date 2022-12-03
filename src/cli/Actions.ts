@@ -49,10 +49,7 @@ export class Actions extends Component {
     const isNumber = Number.isNaN(Number(value))
     const isInRange = +value <= max - 1 && +value >= 0
 
-    if (!isNumber) {
-      this.instruction(`It's not a valid index !\n\n`, "error")
-      return false
-    } else if (isInRange) {
+    if (!isNumber || !isInRange) {
       this.instruction(`It's not a valid index !\n\n`, "error")
       return false
     }

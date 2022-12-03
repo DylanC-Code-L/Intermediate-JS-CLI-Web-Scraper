@@ -1,7 +1,7 @@
 import { Scrapper } from "../web/Scrapper.js";
 import { Actions } from "./Actions.js";
 import { CLI } from "./CLI.js";
-import { Component } from "./Component.js";
+import { Component, Instruction } from "./Component.js";
 
 export class Results extends Component {
   private static instance: Results
@@ -30,25 +30,29 @@ export class Results extends Component {
         break
       case 1: response = await this.scrapper.categories()
         break
-      case 2:
-        console.clear()
-        const research = await this.instantiedAction.get_Value_From_User("Taper quelque chose à rechercher :\n --> ")
-        response = await this.scrapper.research(research)
+      case 2: response = await this.wait_Input_And_Make_Research()
         break;
       default: {
-        this.instruction(`Subject => ${result} inexistant!\n\n`, "error");
-        const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
-        this.summary(summaryResult)
+        this.replay_Summary(`Subject => ${result} inexistant!\n\n`, "error")
         return;
       }
     }
+    this.replay_Summary(`${response}\n\nMenu\n\n`, "classic")
+  }
 
+  private async wait_Input_And_Make_Research() {
     console.clear()
-    this.instruction(response)
+    this.instruction("Taper quelque chose à rechercher :\n --> ")
 
-    this.instruction("\n\nMenu\n\n")
+    const input = await this.multiple_Keypressed_Handler()
+    return await this.scrapper.research(input)
+  }
+
+  private async replay_Summary(reason: string, type: Instruction) {
+    console.clear()
+    this.instruction(reason)
+
     const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
-
     this.summary(summaryResult)
   }
 }

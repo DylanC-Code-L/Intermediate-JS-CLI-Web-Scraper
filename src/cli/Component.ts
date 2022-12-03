@@ -10,7 +10,7 @@ interface Keypressed {
   shift: boolean
 }
 
-type Instruction = "classic" | "error" | "perso"
+export type Instruction = "classic" | "error" | "perso"
 
 export abstract class Component {
   protected output = stdout
@@ -29,6 +29,11 @@ export abstract class Component {
 
     this.output.write(textColor + text)
     return this
+  }
+
+  public clear_And_Prompt(message: string) {
+    console.clear()
+    this.instruction(message)
   }
 
   protected keypressed_Handler(): Promise<Keypressed> {
