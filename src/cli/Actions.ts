@@ -27,7 +27,7 @@ export class Actions extends Component {
     // 2. Get the key pressed by the user and control if its number
     const { name: keypressed } = await this.keypressed_Handler()
 
-    const numberOrFalse = this.valid_Number_Press(keypressed, items.length)
+    const numberOrFalse = this.valid_Number(keypressed, items.length)
 
     // 3. If valid return the key pressed and if isn't, replay the method
     if (typeof numberOrFalse === "number") return numberOrFalse
@@ -48,16 +48,19 @@ export class Actions extends Component {
     actions[index]()
   }
 
-  valid_Number_Press(keypressed: string, max: number) {
-    if (Number.isNaN(Number(keypressed))) {
+  valid_Number(value: string, max: number) {
+    const isNumber = Number.isNaN(Number(value))
+    const isInRange = +value <= max - 1 && +value >= 0
+
+    if (!isNumber) {
       this.instruction(`It's not a valid index !\n\n`, "error")
       return false
-    } else if (+keypressed > max - 1 || +keypressed < 0) {
+    } else if (isInRange) {
       this.instruction(`It's not a valid index !\n\n`, "error")
       return false
     }
 
-    return +keypressed
+    return +value
   }
 
   async get_Value_From_User(message: string): Promise<string> {

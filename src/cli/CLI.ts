@@ -1,4 +1,4 @@
-import { stdin as input, stdout as output } from "node:process"
+import { stdin as input } from "node:process"
 import readline from "node:readline"
 import { Colors_Background, Colors_Font, Colors_Settings, GlobalColors } from "../utils/Colors.js"
 
