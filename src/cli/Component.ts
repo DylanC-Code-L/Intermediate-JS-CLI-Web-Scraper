@@ -31,9 +31,9 @@ export abstract class Component {
     return this
   }
 
-  public clear_And_Prompt(message: string) {
+  public clear_And_Prompt(message: string, type?: Instruction) {
     console.clear()
-    this.instruction(message)
+    this.instruction(message, type)
   }
 
   protected keypressed_Handler(): Promise<Keypressed> {

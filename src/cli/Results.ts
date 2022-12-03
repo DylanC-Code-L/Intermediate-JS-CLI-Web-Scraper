@@ -20,8 +20,7 @@ export class Results extends Component {
   scrapper = Scrapper.getInstance()
 
   public async summary(result: number) {
-    console.clear()
-    this.output.write("Waiting...")
+    this.clear_And_Prompt("Waiting...")
 
     let response: string
 
@@ -37,20 +36,19 @@ export class Results extends Component {
         return;
       }
     }
+
     this.replay_Summary(`${response}\n\nMenu\n\n`, "classic")
   }
 
   private async wait_Input_And_Make_Research() {
-    console.clear()
-    this.instruction("Taper quelque chose à rechercher :\n --> ")
+    this.clear_And_Prompt("Taper quelque chose à rechercher :\n --> ")
 
     const input = await this.multiple_Keypressed_Handler()
     return await this.scrapper.research(input)
   }
 
-  private async replay_Summary(reason: string, type: Instruction) {
-    console.clear()
-    this.instruction(reason)
+  private async replay_Summary(reason: string, type?: Instruction) {
+    this.clear_And_Prompt(reason, type)
 
     const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"])
     this.summary(summaryResult)
