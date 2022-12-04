@@ -15,7 +15,7 @@ export type Instruction = "classic" | "error" | "perso"
 export abstract class Component {
   protected output = stdout
   protected input = stdin
-  constructor(protected instantiedCLI: CLI) { }
+  constructor() { }
 
   public instruction(text: string, type?: Instruction): this {
     let textColor: string

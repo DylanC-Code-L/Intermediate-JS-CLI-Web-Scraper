@@ -1,12 +1,9 @@
 import { GlobalColors } from "../utils/Colors.js";
 import { stdin, stdout } from "node:process";
 export class Component {
-    instantiedCLI;
     output = stdout;
     input = stdin;
-    constructor(instantiedCLI) {
-        this.instantiedCLI = instantiedCLI;
-    }
+    constructor() { }
     instruction(text, type) {
         let textColor;
         if (type === "perso")

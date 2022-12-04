@@ -2,7 +2,7 @@ import { ArticleContent, ListType } from "../web/Scrapper.js";
 import { GlobalColors } from "./Colors.js";
 
 export const Content = {
-  start: `${GlobalColors.Red}__________________________${GlobalColors.Underscore}\n|--- CLI Web Scrapper ---|\n\n${GlobalColors.Reset}${GlobalColors.Blue}This CLI application allow to get article from wikipedia.\n\n`,
+  start: `${GlobalColors.Red}__________________________${GlobalColors.Underscore}\n|--- CLI Web Scraper ---|\n\n${GlobalColors.Reset}${GlobalColors.Blue}This CLI application provides an article from Wikipedia.\n\n`,
   wait: `${GlobalColors.Reset}${GlobalColors.Yellow}\nWaiting...`,
   noContent: "No content has been find...",
   typeSomething: `${GlobalColors.White}Taper quelque chose à rechercher :${GlobalColors.Yellow}\n -->${GlobalColors.Reset} `,
@@ -11,7 +11,9 @@ export const Content = {
   indexInvalid: `It's not a valid index !\n\n`,
 
   indexWithText(text: string, index: number): string {
-    return `${GlobalColors.Reset + GlobalColors.Red}${index}${GlobalColors.Green} --${GlobalColors.Yellow} ${text}\n`;
+    return `${GlobalColors.Reset + GlobalColors.Red}${index}${
+      GlobalColors.Green
+    } --${GlobalColors.Yellow} ${text}\n`;
   },
 
   result(response: string): string {
@@ -19,7 +21,7 @@ export const Content = {
   },
 
   article({ name, description, url }: ArticleContent): string {
-    return `${GlobalColors.Red+GlobalColors.Underscore}Article\n\n${
+    return `${GlobalColors.Red + GlobalColors.Underscore}Article\n\n${
       GlobalColors.Reset
     }${GlobalColors.Blue}Title : ${GlobalColors.Reset}${name}${
       GlobalColors.Blue
