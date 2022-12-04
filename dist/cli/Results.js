@@ -1,13 +1,16 @@
+import { Content } from "../utils/Content.js";
 import { Scrapper } from "../web/Scrapper.js";
 import { Component } from "./Component.js";
 export class Results extends Component {
     instantiedCLI;
     instantiedAction;
     static instance;
+    scrapperInstance;
     constructor(instantiedCLI, instantiedAction) {
         super(instantiedCLI);
         this.instantiedCLI = instantiedCLI;
         this.instantiedAction = instantiedAction;
+        this.scrapperInstance = Scrapper.getInstance();
     }
     static getInstance(instantiedCLI, instantiedAction) {
         if (this.instance)
@@ -15,34 +18,34 @@ export class Results extends Component {
         this.instance = new Results(instantiedCLI, instantiedAction);
         return this.instance;
     }
-    scrapper = Scrapper.getInstance();
     async summary(result) {
-        console.clear();
-        this.output.write("Waiting...");
+        this.clear_And_Prompt(Content.wait);
         let response;
         switch (result) {
             case 0:
-                response = await this.scrapper.random();
+                response = await this.scrapperInstance.random();
                 break;
             case 1:
-                response = await this.scrapper.categories();
+                response = await this.scrapperInstance.categories();
                 break;
             case 2:
-                console.clear();
-                const research = await this.instantiedAction.get_Value_From_User("Taper quelque chose à rechercher :\n --> ");
-                response = await this.scrapper.research(research);
+                response = await this.wait_Input_And_Make_Research();
                 break;
             default: {
-                this.instruction(`Subject => ${result} inexistant!\n\n`, "error");
-                const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"]);
-                this.summary(summaryResult);
+                this.replay_Summary(Content.indexInvalid, "error");
                 return;
             }
         }
-        console.clear();
-        this.instruction(response);
-        this.instruction("\n\nMenu\n\n");
-        const summaryResult = await this.instantiedAction.prompt_Ordonned_List(["Random subject", "Categories", "Keywords"]);
+        this.replay_Summary(Content.result(response), "classic");
+    }
+    async wait_Input_And_Make_Research() {
+        this.clear_And_Prompt(Content.typeSomething);
+        const input = await this.multiple_Keypressed_Handler();
+        return await this.scrapperInstance.research(input);
+    }
+    async replay_Summary(reason, type) {
+        this.clear_And_Prompt(reason, type);
+        const summaryResult = await this.instantiedAction.prompt_Ordonned_List(Content.summaryChoice);
         this.summary(summaryResult);
     }
 }

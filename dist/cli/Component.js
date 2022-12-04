@@ -20,6 +20,10 @@ export class Component {
         this.output.write(textColor + text);
         return this;
     }
+    clear_And_Prompt(message, type) {
+        console.clear();
+        this.instruction(message, type);
+    }
     keypressed_Handler() {
         return new Promise((resolve) => this.input.once("keypress", (_, key) => { resolve(key); }));
     }

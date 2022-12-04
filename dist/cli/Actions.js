@@ -1,5 +1,5 @@
 import { stdout as output } from "node:process";
-import { GlobalColors } from "../utils/Colors.js";
+import { Content } from "../utils/Content.js";
 import { Component } from "./Component.js";
 export class Actions extends Component {
     instantiedCLI;
@@ -14,39 +14,27 @@ export class Actions extends Component {
         this.instance = new Actions(instantiedCLI);
         return this.instance;
     }
-    async prompt_Ordonned_List(items) {
-        // 1. Print generic instruction and the ordonned list of strings
-        this.instruction("Please chose an index below and press Enter.\n\n");
-        const text = this.format_Ordonned_List_With_Color_Settings(items);
-        output.write(text + '\n');
-        // 2. Get the key pressed by the user and control if its number
+    async prompt_Ordonned_List(lists) {
+        this.instruction(Content.choseIndex);
+        const text = lists.map(Content.indexWithText).join("");
+        output.write(text + "\n");
+        return this.keypressed_For_Ordonned_List(lists);
+    }
+    async keypressed_For_Ordonned_List(lists) {
         const { name: keypressed } = await this.keypressed_Handler();
-        const numberOrFalse = this.valid_Number_Press(keypressed, items.length);
-        // 3. If valid return the key pressed and if isn't, replay the method
-        if (typeof numberOrFalse === "number")
-            return numberOrFalse;
-        return this.prompt_Ordonned_List(items);
+        const isNumber = this.valid_Number(keypressed, lists.length);
+        if (isNumber)
+            return +keypressed;
+        return this.prompt_Ordonned_List(lists);
     }
-    format_Ordonned_List_With_Color_Settings(texts) {
-        const beforeIndex = GlobalColors.Reset + GlobalColors.Red;
-        const afterIndex = GlobalColors.Green;
-        const beforeText = GlobalColors.Yellow;
-        const formatedOrdonnedList = texts.map((text, index) => `${beforeIndex}${index}${afterIndex} --${beforeText} ${text}\n`).join('');
-        return formatedOrdonnedList;
-    }
-    play_One_Result_Of_An_Ordonned_List(index, actions) {
-        actions[index]();
-    }
-    valid_Number_Press(keypressed, max) {
-        if (Number.isNaN(Number(keypressed))) {
-            this.instruction(`It's not a valid index !\n\n`, "error");
+    valid_Number(value, max) {
+        const isNumber = !Number.isNaN(Number(value));
+        const isInRange = +value <= max - 1 && +value >= 0;
+        if (!isNumber || !isInRange) {
+            this.instruction(Content.indexInvalid, "error");
             return false;
         }
-        else if (+keypressed > max - 1 || +keypressed < 0) {
-            this.instruction(`It's not a valid index !\n\n`, "error");
-            return false;
-        }
-        return +keypressed;
+        return true;
     }
     async get_Value_From_User(message) {
         this.instruction(message);

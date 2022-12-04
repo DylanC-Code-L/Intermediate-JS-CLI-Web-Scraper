@@ -11,8 +11,6 @@ interface CLIColor {
 export class CLI {
   private static instance: CLI
   public promptConfig: string = "\x1b[0m"
-  public separator: string =
-    GlobalColors.Magenta + "\n--------------------------\n\n"
 
   private constructor() {
     this.config()

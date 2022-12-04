@@ -4,7 +4,6 @@ import { GlobalColors } from "../utils/Colors.js";
 export class CLI {
     static instance;
     promptConfig = "\x1b[0m";
-    separator = GlobalColors.Magenta + "\n--------------------------\n\n";
     constructor() {
         this.config();
     }

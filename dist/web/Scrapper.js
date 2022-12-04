@@ -1,8 +1,9 @@
 import puppeteer from "puppeteer";
-import { GlobalColors } from "../utils/Colors.js";
+import { Content } from "../utils/Content.js";
 export class Scrapper {
     static instance;
     page;
+    WK_URL = "https://fr.wikipedia.org/wiki/";
     constructor() {
         this.start();
     }
@@ -17,48 +18,49 @@ export class Scrapper {
         this.page = await browser.newPage();
     }
     async random() {
-        // 1. Request to the url below that redirect to random article 
-        await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard", { waitUntil: "domcontentloaded" });
-        // 2. Get h1 and multiple p elements, then extract them text 
-        const h1El = await this.page.$("#firstHeading");
-        const h1 = await (await h1El.getProperty('textContent')).jsonValue();
-        const p1El = await this.page.$$("#mw-content-text > div > p");
-        let p;
-        // 3. Control if the p isn't empty and return formatted string
-        for (const el of p1El) {
-            const text = await (await el.getProperty("textContent")).jsonValue();
-            if (text.trim() !== "") {
-                p = text;
-                break;
-            }
+        await this.page.goto(`${this.WK_URL}Sp%C3%A9cial:Page_au_hasard`);
+        const h1Element = await this.page.$("#firstHeading");
+        const h1Content = await (await h1Element.getProperty("textContent")).jsonValue();
+        const paragrapheElements = await this.page.$$("#mw-content-text > div > p");
+        let pContent = await this.find_First_Element_With_Text_Content(paragrapheElements);
+        return Content.article({
+            name: h1Content,
+            description: pContent,
+            url: this.page.url(),
+        });
+    }
+    async find_First_Element_With_Text_Content(elements) {
+        for (const element of elements) {
+            const text = await (await element.getProperty("textContent")).jsonValue();
+            const isEmpty = text.trim() === "";
+            if (!isEmpty)
+                return text;
         }
-        const result = `Title : ${h1}\nShort Description : ${p.slice(0, 75)}...\n\nSee the article : ${this.page.url()}`;
-        return result;
+        return Content.noContent;
     }
     async categories() {
-        // 1. Open page 'Categorie' and get categories' ancre
-        await this.page.goto("https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Accueil");
+        await this.page.goto(`${this.WK_URL}Cat%C3%A9gorie:Accueil`);
         const categoriesElements = await this.page.$$("#mw-content-text > div > div:nth-child(3) b > a");
         return await this.extract_And_Format_Data(categoriesElements, "Category");
     }
     async research(search) {
-        await this.page.goto("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche");
-        await this.page.$eval("input[id='ooui-php-1']", (el, value) => el.value = value, search);
+        await this.page.goto(`${this.WK_URL}Sp%C3%A9cial:Recherche`);
+        await this.page.$eval("input[id='ooui-php-1']", (el, value) => (el.value = value), search);
         await this.page.click("#search button[type='submit']");
         await this.page.waitForNavigation();
         const articlesElements = await this.page.$$(".mw-search-results li:nth-child(-n+3) .searchResultImage-text a");
         return await this.extract_And_Format_Data(articlesElements, "Article");
     }
     async extract_And_Format_Data(data, type) {
-        // 1. Extract each name and url and format them in string 
+        // 1. Extract each name and url and format them in string
         const formatData = data.map(async (el) => {
             const articleName = await (await el.getProperty("textContent")).jsonValue();
-            const url = await (await el.getProperty("href")).jsonValue();
-            return `${GlobalColors.Yellow}${type} : ${GlobalColors.White}${articleName}\n${GlobalColors.Green}See the page : ${GlobalColors.White}${GlobalColors.Underscore}${url}${GlobalColors.Reset}`;
+            const url = (await (await el.getProperty("href")).jsonValue());
+            return Content.shortArticle({ name: articleName, url }, type);
         });
         // 3. Return string that contain all data previously formated
         const result = await Promise.all(formatData);
-        return result.join("\n\n");
+        return Content.articlesList(result, type);
     }
 }
 //# sourceMappingURL=Scrapper.js.map
